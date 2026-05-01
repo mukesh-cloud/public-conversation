@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Public Wall</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #f5f4f0;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .hero {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem;
+    color: #1a1a1a;
+    margin-bottom: .4rem;
+  }
+
+  .hero p {
+    font-size: 14px;
+    color: #777;
+  }
+
+  .compose {
+    background: #fff;
+    border: 1px solid #e0ddd6;
+    border-radius: 14px;
+    padding: 1.25rem;
+    margin-bottom: 2rem;
+  }
+
+  .compose textarea {
+    width: 100%;
+    min-height: 120px;
+    resize: vertical;
+    border: 1px solid #e0ddd6;
+    border-radius: 8px;
+    padding: .75rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    color: #1a1a1a;
+    background: #faf9f6;
+    outline: none;
+    transition: border .15s;
+  }
+
+  .compose textarea:focus { border-color: #aaa; }
+
+  .compose-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: .75rem;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .name-input {
+    flex: 1;
+    min-width: 140px;
+    height: 36px;
+    border: 1px solid #e0ddd6;
+    border-radius: 8px;
+    padding: 0 .75rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: #1a1a1a;
+    background: #faf9f6;
+    outline: none;
+  }
+
+  .name-input:focus { border-color: #aaa; }
+
+  .char-count { font-size: 12px; color: #aaa; white-space: nowrap; }
+  .char-count.warn { color: #BA7517; }
+  .char-count.over { color: #A32D2D; }
+
+  .post-btn {
+    height: 36px;
+    padding: 0 1.25rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background: #fff;
+    color: #1a1a1a;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background .15s, transform .1s;
+    white-space: nowrap;
+  }
+
+  .post-btn:hover { background: #f0ede6; }
+  .post-btn:active { transform: scale(.98); }
+  .post-btn:disabled { opacity: .4; cursor: not-allowed; }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+  }
+
+  .divider span {
+    font-size: 13px;
+    color: #aaa;
+    white-space: nowrap;
+  }
+
+  .divider hr {
+    flex: 1;
+    border: none;
+    border-top: 1px solid #e0ddd6;
+  }
+
+  .feed { display: flex; flex-direction: column; gap: 1rem; }
+
+  .msg-card {
+    background: #fff;
+    border: 1px solid #e0ddd6;
+    border-radius: 14px;
+    padding: 1.25rem;
+    animation: slideIn .3s ease;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .msg-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: .75rem;
+  }
+
+  .msg-author { display: flex; align-items: center; gap: 8px; }
+
+  .avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  .author-name { font-size: 13px; font-weight: 500; color: #1a1a1a; }
+  .msg-time { font-size: 12px; color: #aaa; }
+
+  .msg-body {
+    font-size: 15px;
+    color: #1a1a1a;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .msg-body.big {
+    font-size: 22px;
+    font-family: 'Playfair Display', serif;
+    line-height: 1.4;
+  }
+
+  .like-btn {
+    font-size: 12px;
+    color: #777;
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: 'DM Sans', sans-serif;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background .15s;
+  }
+
+  .like-btn:hover { background: #f0ede6; }
+
+  .empty {
+    text-align: center;
+    padding: 3rem 0;
+    color: #aaa;
+    font-size: 14px;
+  }
+
+  .msg-count {
+    font-size: 13px;
+    color: #aaa;
+    text-align: center;
+    margin-top: 1.5rem;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="hero">
+    <h1>The Public Wall</h1>
+    <p>Post a message — anyone who visits can read it.</p>
+  </div>
+
+  <div class="compose">
+    <textarea id="msgText" placeholder="Write something for the world to read..." maxlength="50000" oninput="updateCount()"></textarea>
+    <div class="compose-footer">
+      <input class="name-input" id="authorName" placeholder="Your name (optional)" maxlength="40">
+      <span class="char-count" id="charCount">0 / 50000</span>
+      <button class="post-btn" id="postBtn" onclick="postMessage()" disabled>Post ↗</button>
+    </div>
+  </div>
+
+  <div class="divider"><hr><span id="msgCountLabel">messages on this wall</span><hr></div>
+  <div class="feed" id="feed"><div class="empty">No messages yet. Be the first to post!</div></div>
+</div>
+
+<script>
+  const COLORS = [
+    { bg: '#EEEDFE', txt: '#3C3489' },
+    { bg: '#E1F5EE', txt: '#085041' },
+    { bg: '#FAECE7', txt: '#712B13' },
+    { bg: '#E6F1FB', txt: '#0C447C' },
+    { bg: '#EAF3DE', txt: '#27500A' },
+    { bg: '#FAEEDA', txt: '#633806' },
+    { bg: '#FBEAF0', txt: '#72243E' },
+  ];
+
+  const STORAGE_KEY = 'public_wall_messages';
+  let messages = [];
+
+  function loadMessages() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) messages = JSON.parse(raw);
+    } catch (e) { messages = []; }
+    renderFeed();
+  }
+
+  function saveMessages() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(messages)); } catch (e) {}
+  }
+
+  function updateCount() {
+    const txt = document.getElementById('msgText').value;
+    const len = txt.length;
+    const cc = document.getElementById('charCount');
+    cc.textContent = len.toLocaleString() + ' / 50,000';
+    cc.className = 'char-count' + (len > 45000 ? ' over' : len > 40000 ? ' warn' : '');
+    document.getElementById('postBtn').disabled = txt.trim().length === 0;
+  }
+
+  function getInitials(name) {
+    if (!name) return '?';
+    return name.trim().split(' ').map(w => w[0].toUpperCase()).slice(0, 2).join('');
+  }
+
+  function postMessage() {
+    const txt = document.getElementById('msgText').value.trim();
+    if (!txt) return;
+    const name = document.getElementById('authorName').value.trim() || 'Anonymous';
+    const color = COLORS[messages.length % COLORS.length];
+    const msg = {
+      id: Date.now(),
+      text: txt,
+      author: name,
+      time: new Date().toISOString(),
+      likes: 0,
+      color
+    };
+    messages.unshift(msg);
+    saveMessages();
+    renderFeed();
+    document.getElementById('msgText').value = '';
+    document.getElementById('authorName').value = '';
+    updateCount();
+  }
+
+  function likeMsg(id) {
+    const m = messages.find(x => x.id === id);
+    if (m) { m.likes = (m.likes || 0) + 1; saveMessages(); renderFeed(); }
+  }
+
+  function timeAgo(iso) {
+    const diff = (Date.now() - new Date(iso)) / 1000;
+    if (diff < 60) return 'just now';
+    if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+    if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+    if (diff < 86400 * 30) return Math.floor(diff / 86400) + 'd ago';
+    return new Date(iso).toLocaleDateString();
+  }
+
+  function escHtml(s) {
+    return s
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function renderFeed() {
+    const feed = document.getElementById('feed');
+    const label = document.getElementById('msgCountLabel');
+    label.textContent = messages.length + ' message' + (messages.length !== 1 ? 's' : '') + ' on this wall';
+
+    if (messages.length === 0) {
+      feed.innerHTML = '<div class="empty">No messages yet. Be the first to post!</div>';
+      return;
+    }
+
+    feed.innerHTML = messages.map(m => {
+      const isBig = m.text.length < 120;
+      const c = m.color || COLORS[0];
+      return `
+        <div class="msg-card">
+          <div class="msg-header">
+            <div class="msg-author">
+              <div class="avatar" style="background:${c.bg};color:${c.txt}">${getInitials(m.author)}</div>
+              <span class="author-name">${escHtml(m.author)}</span>
+            </div>
+            <span class="msg-time">${timeAgo(m.time)}</span>
+          </div>
+          <p class="msg-body${isBig ? ' big' : ''}">${escHtml(m.text)}</p>
+          <div style="margin-top:.75rem;display:flex;justify-content:flex-end">
+            <button class="like-btn" onclick="likeMsg(${m.id})">♡ ${m.likes || 0}</button>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  loadMessages();
+</script>
+</body>
+</html>
